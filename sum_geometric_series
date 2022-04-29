@@ -1,0 +1,42 @@
+import time
+start = time.time()
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+z=100
+sum=np.zeros(z)
+frac=np.zeros(z)
+#print(len(sum))
+#print(sum)
+for y in range(1,z):
+    geom=1-y/z
+    x=0.0; max=1000#; geom=0.5
+    for n in range(1,max):
+        for j in range(0,n):
+            #print ("j = ",j)
+            x=x+(geom)**j
+        if n == (max-1): #print ("x =",x,"geom =", geom)
+            sum[y-1]=x
+            frac[y-1]=geom
+        j=0;x=0
+    x=0
+#print(sum); print(frac)
+plt.plot(frac, sum, "o")
+y=x=0
+def f(x, A, B):
+    y = A/(B-x)
+    return y
+
+parameters, covariance = curve_fit(f, frac, sum)
+
+fit_A = parameters[0]
+fit_B = parameters[1]
+print(fit_A)
+print(fit_B)
+
+fit_y = f(frac, fit_A, fit_B)
+plt.plot(frac, sum, 'o', label='data')
+plt.plot(frac, fit_y, '-', label='fit')
+plt.legend()
+end = time.time()
+print("time elapsed (s):", end - start)
